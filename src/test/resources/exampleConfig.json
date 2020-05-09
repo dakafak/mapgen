@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    {
+      "id": 1,
+      "name": "water",
+      "physical": "WATER",
+      "color": "#0000FF",
+      "image": "C:\\example\\path\\to\\image"
+    },
+    {
+      "id": 2,
+      "name": "dirt",
+      "physical": "GROUND",
+      "color": "#8B4513",
+      "image": "C:\\example\\path\\to\\image"
+    },
+    {
+      "id": 3,
+      "name": "grass",
+      "physical": "GROUND",
+      "color": "#00FF00",
+      "image": "C:\\example\\path\\to\\image"
+    }
+  ],
+  "regions": [
+    {
+      "id": 1,
+      "name": "grassland",
+      "tiles": ["1x3", "2", "3x3"]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
-package dev.fanger.mapgen.generation.map.util;
+package dev.fanger.mapgen.util;
 
-import dev.fanger.mapgen.generation.map.Chunk;
+import dev.fanger.mapgen.map.Chunk;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
