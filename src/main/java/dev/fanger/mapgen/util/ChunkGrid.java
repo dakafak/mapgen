@@ -23,7 +23,7 @@ public class ChunkGrid {
         this.growSize = growSize;
     }
 
-    public synchronized void addChunk(int x, int y, Chunk chunk) {
+    public synchronized void setChunk(int x, int y, Chunk chunk) {
         // TODO There is a more efficient way to grow instead of one growth at a time - consider implementing this
 
         while(getChunkMapY(y) < 0) {
@@ -59,7 +59,7 @@ public class ChunkGrid {
         return chunkMap[chunkMapY][chunkMapX];
     }
 
-    public synchronized void growNorth() {
+    protected synchronized void growNorth() {
         Chunk[][] newChunkMap = new Chunk[getHeight() + growSize][getWidth()];
 
         for(int y = 0; y < getHeight(); y++) {
@@ -72,7 +72,7 @@ public class ChunkGrid {
         zeroY += growSize;
     }
 
-    public synchronized void growEast() {
+    protected synchronized void growEast() {
         Chunk[][] newChunkMap = new Chunk[getHeight()][getWidth() + growSize];
 
         for(int y = 0; y < getHeight(); y++) {
@@ -84,7 +84,7 @@ public class ChunkGrid {
         this.chunkMap = newChunkMap;
     }
 
-    public synchronized void growSouth() {
+    protected synchronized void growSouth() {
         Chunk[][] newChunkMap = new Chunk[getHeight() + growSize][getWidth()];
 
         for(int y = 0; y < getHeight(); y++) {
@@ -96,7 +96,7 @@ public class ChunkGrid {
         this.chunkMap = newChunkMap;
     }
 
-    public synchronized void growWest() {
+    protected synchronized void growWest() {
         Chunk[][] newChunkMap = new Chunk[getHeight()][getWidth() + growSize];
 
         for(int y = 0; y < getHeight(); y++) {

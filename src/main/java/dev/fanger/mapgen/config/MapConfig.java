@@ -3,21 +3,24 @@ package dev.fanger.mapgen.config;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class MapConfig {
 
     public static final String JSON_KEY_TILES = "tiles";
     public static final String JSON_KEY_REGIONS = "regions";
 
-    private Map<Integer, RegionConfig> regionConfigMap;
-    private Map<Integer, TileConfig> tileConfigMap;
+    private List<RegionConfig> regionConfigList;
+    private LinkedHashMap<Integer, RegionConfig> regionConfigMap;
+    private LinkedHashMap<Integer, TileConfig> tileConfigMap;
 
     public MapConfig(JSONObject jsonObject) {
-        regionConfigMap = new HashMap<>();
-        tileConfigMap = new HashMap<>();
+        regionConfigList = new ArrayList<>();
+        regionConfigMap = new LinkedHashMap<>();
+        tileConfigMap = new LinkedHashMap<>();
 
         JSONArray allTileConfigs = jsonObject.getJSONArray(JSON_KEY_TILES);
         for(int i = 0; i < allTileConfigs.length(); i++) {
@@ -30,8 +33,14 @@ public class MapConfig {
         for(int i = 0; i < allRegionConfigs.length(); i++) {
             JSONObject regionConfigJSONObject = allRegionConfigs.getJSONObject(i);
             RegionConfig regionConfig = new RegionConfig(regionConfigJSONObject, tileConfigMap);
+            regionConfigList.add(regionConfig);
             regionConfigMap.put(regionConfig.getId(), regionConfig);
         }
+    }
+
+    public RegionConfig getRandomRegionConfig() {
+        int randomConfigIndex = (int) Math.floor(Math.random() * regionConfigList.size());
+        return regionConfigList.get(randomConfigIndex);
     }
 
     public RegionConfig getRegionConfig(int id) {
