@@ -125,6 +125,22 @@ public class ChunkGrid {
         return zeroY;
     }
 
+    public int getFirstX() {
+        return -getZeroX();
+    }
+
+    public int getLastX() {
+        return chunkMap[0].length - getZeroX();
+    }
+
+    public int getFirstY() {
+        return -getZeroY();
+    }
+
+    public int getLastY() {
+        return chunkMap.length - getZeroY();
+    }
+
     private int getChunkMapX(int x) {
         return x + zeroX;
     }

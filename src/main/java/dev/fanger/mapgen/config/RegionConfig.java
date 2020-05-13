@@ -3,6 +3,7 @@ package dev.fanger.mapgen.config;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.awt.Color;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -12,12 +13,16 @@ public class RegionConfig {
     private static final String JSON_NAME = "name";
     private static final String JSON_TILE_IDS = "tiles";
     private static final String JSON_TILE_WEIGHT_PREFIX = "x";
+    private static final String JSON_CENTER_SPAWN_DISTANCE = "spawnDistance";
+    private static final String JSON_COLOR = "color";
 
     private int id;
     private String name;
     private LinkedHashMap<TileConfig, Double> tileConfigToWeight;
     private LinkedHashMap<TileConfig, Double> tileConfigToWeightRange;
     private double totalTileWeight;
+    private double centerSpawnDistance;
+    private Color regionColor;
 
     public RegionConfig(JSONObject jsonObject, Map<Integer, TileConfig> tileConfigMap) {
         id = jsonObject.getInt(JSON_ID);
@@ -52,16 +57,19 @@ public class RegionConfig {
             }
             tileConfigToWeightRange.put(tileConfig, totalWeightRangeSoFar);
         }
+
+        centerSpawnDistance = jsonObject.optDouble(JSON_CENTER_SPAWN_DISTANCE, 0);
+        regionColor = Color.decode(jsonObject.optString(JSON_COLOR, "#FFFFFF"));
     }
 
-    public TileConfig getTileConfigFrom100Range(double range) {
+    public TileConfig getTileConfigFrom100Range(double height) {
         for(TileConfig tileConfig : tileConfigToWeightRange.keySet()) {
-            if(range <= tileConfigToWeightRange.get(tileConfig)) {
+            if(height <= tileConfigToWeightRange.get(tileConfig)) {
                 return tileConfig;
             }
         }
 
-        // This should never return null if proper range numbers are used
+        // This should never return null if proper height numbers are used
         return null;
     }
 
@@ -73,12 +81,24 @@ public class RegionConfig {
         return name;
     }
 
-    public Map<TileConfig, Double> getTileConfigToWeight() {
+    public LinkedHashMap<TileConfig, Double> getTileConfigToWeight() {
         return tileConfigToWeight;
+    }
+
+    public LinkedHashMap<TileConfig, Double> getTileConfigToWeightRange() {
+        return tileConfigToWeightRange;
     }
 
     public double getTotalTileWeight() {
         return totalTileWeight;
+    }
+
+    public double getCenterSpawnDistance() {
+        return centerSpawnDistance;
+    }
+
+    public Color getRegionColor() {
+        return regionColor;
     }
 
     @Override
@@ -87,8 +107,9 @@ public class RegionConfig {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", tileConfigToWeight=" + tileConfigToWeight +
+                ", tileConfigToWeightRange=" + tileConfigToWeightRange +
                 ", totalTileWeight=" + totalTileWeight +
+                ", centerSpawnDistance=" + centerSpawnDistance +
                 '}';
     }
-
 }

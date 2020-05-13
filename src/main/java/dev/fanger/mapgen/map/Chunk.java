@@ -19,6 +19,22 @@ public class Chunk {
         tileGrid = new Tile[size][size];
     }
 
+    public double getQ1Height() {
+        return tileGrid[0][size - 1].getHeight();
+    }
+
+    public double getQ2Height() {
+        return tileGrid[0][0].getHeight();
+    }
+
+    public double getQ3Height() {
+        return tileGrid[size - 1][0].getHeight();
+    }
+
+    public double getQ4Height() {
+        return tileGrid[size - 1][size - 1].getHeight();
+    }
+
     public Tile getTile(double gameX, double gameY) {
         int tileX = ((int) gameX) - (chunkX * size);
         int tileY = ((int) gameY) - (chunkY * size);
@@ -42,4 +58,7 @@ public class Chunk {
         return tileGrid;
     }
 
+    public RegionConfig getRegionConfig() {
+        return regionConfig;
+    }
 }

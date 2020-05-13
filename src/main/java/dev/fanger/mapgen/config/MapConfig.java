@@ -1,5 +1,6 @@
 package dev.fanger.mapgen.config;
 
+import dev.fanger.mapgen.util.SeedGen;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,9 +39,17 @@ public class MapConfig {
         }
     }
 
-    public RegionConfig getRandomRegionConfig() {
-        int randomConfigIndex = (int) Math.floor(Math.random() * regionConfigList.size());
-        return regionConfigList.get(randomConfigIndex);
+    public RegionConfig getRandomRegionConfig(int chunkX, int chunkY, short seed) {
+        List<RegionConfig> availableRandomConfigs = new ArrayList<>();
+        for(RegionConfig regionConfig : regionConfigList) {
+            double distanceFromCenter = Math.sqrt(Math.pow(chunkX, 2) + Math.pow(chunkY, 2));
+            if(distanceFromCenter >= regionConfig.getCenterSpawnDistance()) {
+                availableRandomConfigs.add(regionConfig);
+            }
+        }
+
+        int randomConfigIndex = (int) Math.floor(SeedGen.randomNumber(chunkX, chunkY, seed, availableRandomConfigs.size()));
+        return availableRandomConfigs.get(randomConfigIndex);
     }
 
     public RegionConfig getRegionConfig(int id) {

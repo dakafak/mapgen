@@ -23,7 +23,7 @@ public class TileConfig {
         id = jsonObject.getInt(JSON_ID);
         name = jsonObject.getString(JSON_NAME);
         tilePhysicalProperty = TilePhysicalProperty.valueOf(jsonObject.getString(JSON_PHYSICAL_PROPERTY));
-        tileColor = Color.decode(jsonObject.getString(JSON_COLOR));
+        tileColor = Color.decode(jsonObject.optString(JSON_COLOR, "#FFFFFF"));
         textureImageLocation = jsonObject.getString(JSON_TEXTURE_IMAGE_LOCATION);
     }
 

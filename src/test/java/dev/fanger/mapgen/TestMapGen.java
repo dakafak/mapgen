@@ -22,7 +22,7 @@ public class TestMapGen {
             MapConfig mapConfig = new MapConfig(loadedJsonConfig);
             System.out.println(mapConfig);
 
-            Map map = new Map(17, mapConfig);
+            Map map = new Map(17, mapConfig, (short) 3456);
 
             JFrame viewerFrame = new JFrame();
             viewerFrame.setSize(800, 400);
