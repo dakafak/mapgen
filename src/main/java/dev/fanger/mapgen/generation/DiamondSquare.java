@@ -105,7 +105,15 @@ public class DiamondSquare {
             totalHeight += heightMap[y][x + distanceToDiamondCorners];
         }
 
-        heightMap[y][x] = totalHeight / numberCorners;
+        double newSquareHeight = (totalHeight / numberCorners) + (SeedGen.randomNumber(x, y, seed, 10) - 5);
+
+        if(newSquareHeight < minHeight) {
+            newSquareHeight = minHeight;
+        } else if(newSquareHeight > maxHeight) {
+            newSquareHeight = maxHeight;
+        }
+
+        heightMap[y][x] = newSquareHeight;
     }
 
     private static boolean pointOnGrid(double[][] heightMap, int x, int y) {
