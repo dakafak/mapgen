@@ -1,4 +1,7 @@
 {
+  "groupRegions": true,
+  "waterLevel": 50.0,
+  "shoreLevel": 52.0,
   "tiles": [
     {
       "id": 1,
@@ -9,9 +12,9 @@
     },
     {
       "id": 2,
-      "name": "dirt",
+      "name": "sand",
       "physical": "GROUND",
-      "color": "#8B4513",
+      "color": "#c2b280",
       "image": "C:\\example\\path\\to\\image"
     },
     {
@@ -20,13 +23,52 @@
       "physical": "GROUND",
       "color": "#00AA00",
       "image": "C:\\example\\path\\to\\image"
+    },
+    {
+      "id": 4,
+      "name": "rockyBeach",
+      "physical": "GROUND",
+      "color": "#888888",
+      "image": "C:\\example\\path\\to\\image"
+    },
+    {
+      "id": 5,
+      "name": "snowyGrass",
+      "physical": "GROUND",
+      "color": "#CCCCCC",
+      "image": "C:\\example\\path\\to\\image"
+    }
+  ],
+  "resources": [
+    {
+      "id": 1,
+      "name": "tree",
+      "type": "WOOD",
+      "color": "#00AA00",
+      "image": "C:\\example\\path\\to\\image"
     }
   ],
   "regions": [
     {
       "id": 1,
       "name": "grassland",
-      "tiles": ["1x45", "2x5", "3x50"]
+      "waterTile": 1,
+      "shoreTile": 2,
+      "landTile": 3,
+      "resources": [1],
+      "groupResources": true,
+      "color": "#00AA00"
+    },
+    {
+      "id": 2,
+      "name": "snow",
+      "waterTile": 1,
+      "shoreTile": 4,
+      "landTile": 5,
+      "spawnDistance": 5,
+      "resources": [],
+      "groupResources": true,
+      "color": "#000000"
     }
   ]
 }

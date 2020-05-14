@@ -11,12 +11,20 @@ import java.util.List;
 
 public class MapConfig {
 
-    public static final String JSON_KEY_TILES = "tiles";
-    public static final String JSON_KEY_REGIONS = "regions";
+    private static final String JSON_KEY_TILES = "tiles";
+    private static final String JSON_KEY_REGIONS = "regions";
+    private static final String JSON_KEY_GROUP_REGIONS = "groupRegions";
+    private static final String JSON_KEY_WATER_LEVEL = "waterLevel";
+    private static final String JSON_KEY_SHORE_LEVEL = "shoreLevel";
+
+    private boolean groupRegions;//TODO probably remove gorup regions and try to group more off random number generation?
+    private double waterLevel;
+    private double shoreLevel;
 
     private List<RegionConfig> regionConfigList;
     private LinkedHashMap<Integer, RegionConfig> regionConfigMap;
     private LinkedHashMap<Integer, TileConfig> tileConfigMap;
+    //TODO add resource map and resources -- also enum for resource type similar to physical properties
 
     public MapConfig(JSONObject jsonObject) {
         regionConfigList = new ArrayList<>();
@@ -37,9 +45,14 @@ public class MapConfig {
             regionConfigList.add(regionConfig);
             regionConfigMap.put(regionConfig.getId(), regionConfig);
         }
+
+        groupRegions = jsonObject.optBoolean(JSON_KEY_GROUP_REGIONS, false);
+        waterLevel = jsonObject.getDouble(JSON_KEY_WATER_LEVEL);
+        shoreLevel = jsonObject.getDouble(JSON_KEY_SHORE_LEVEL);
     }
 
     public RegionConfig getRandomRegionConfig(int chunkX, int chunkY, short seed) {
+        //TODO should do something here to better group regions... maybe by pseudo random numbers..
         List<RegionConfig> availableRandomConfigs = new ArrayList<>();
         for(RegionConfig regionConfig : regionConfigList) {
             double distanceFromCenter = Math.sqrt(Math.pow(chunkX, 2) + Math.pow(chunkY, 2));
@@ -68,12 +81,20 @@ public class MapConfig {
         return tileConfigMap.values();
     }
 
+    public double getWaterLevel() {
+        return waterLevel;
+    }
+
+    public double getShoreLevel() {
+        return shoreLevel;
+    }
+
     @Override
     public String toString() {
         return "MapConfig{" +
-                "regionConfigMap=" + regionConfigMap +
+                "regionConfigList=" + regionConfigList +
+                ", regionConfigMap=" + regionConfigMap +
                 ", tileConfigMap=" + tileConfigMap +
                 '}';
     }
-
 }

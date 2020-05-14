@@ -6,6 +6,8 @@ import dev.fanger.mapgen.generation.DiamondSquare;
 import dev.fanger.mapgen.util.ChunkGrid;
 import dev.fanger.mapgen.util.SeedGen;
 
+import static dev.fanger.mapgen.generation.DiamondSquare.MAX_HEIGHT;
+
 public class Map {
 
     private int chunkSize;
@@ -41,15 +43,22 @@ public class Map {
         Chunk newChunk = new Chunk(chunkX, chunkY, chunkSize, randomRegionConfig);
 
         // Quadrant heights
-        double newQ1Height = getQ1Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY - 1, seed, 100));
-        double newQ2Height = getQ2Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY - 1, seed, 100));
-        double newQ3Height = getQ3Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY + 1, seed, 100));
-        double newQ4Height = getQ4Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY + 1, seed, 100));
+        double newQ1Height = getQ1Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY - 1, seed, MAX_HEIGHT));
+        double newQ2Height = getQ2Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY - 1, seed, MAX_HEIGHT));
+        double newQ3Height = getQ3Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY + 1, seed, MAX_HEIGHT));
+        double newQ4Height = getQ4Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY + 1, seed, MAX_HEIGHT));
 
         // get tile height map
-        //TODO check if this chunk has any neighbors. It should use the seed values as a backup for corners that do not connect
         double[][] newChunkHeightMap = DiamondSquare.getHeightMapWithQuadrants(chunkSize, newQ1Height, newQ2Height, newQ3Height, newQ4Height, seed);
-        newChunk.generate(newChunkHeightMap);
+        newChunk.generate(
+                newChunkHeightMap,
+                seed,
+                mapConfig.getWaterLevel(),
+                mapConfig.getShoreLevel(),
+                getChunk(chunkX, chunkY - 1),
+                getChunk(chunkX, chunkY + 1),
+                getChunk(chunkX + 1, chunkY),
+                getChunk(chunkX - 1, chunkY));
         chunkGrid.setChunk(chunkX, chunkY, newChunk);
     }
 
