@@ -1,6 +1,7 @@
 package dev.fanger.mapgen;
 
 import dev.fanger.mapgen.map.Chunk;
+import dev.fanger.mapgen.map.ChunkCoordinate;
 import dev.fanger.mapgen.map.Map;
 import dev.fanger.mapgen.map.Tile;
 
@@ -10,15 +11,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GridViewer extends JComponent implements ActionListener {
 
     private Map map;
+    private ConcurrentLinkedQueue<ChunkCoordinate> chunksToGenerate;
 
     public GridViewer(Map map) {
         this.map = map;
+        this.chunksToGenerate = new ConcurrentLinkedQueue();
         resetDrawingValues();
-        Timer timer  = new Timer(100, this);
+        Timer timer  = new Timer(33, this);
         timer.start();
     }
 
@@ -53,18 +57,22 @@ public class GridViewer extends JComponent implements ActionListener {
         for(int y = -currentRadius; y <= currentRadius; y++) {
             for(int x = -currentRadius; x <= currentRadius; x++) {
                 if(Math.abs(y) == currentRadius || Math.abs(x) == currentRadius) {
-                    map.generateChunk(x, y);
+                    chunksToGenerate.add(new ChunkCoordinate(x, y));
                 }
             }
         }
 
         currentRadius++;
-        resetDrawingValues();
-        repaint();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        ChunkCoordinate chunkCoordinate = chunksToGenerate.poll();
+        if(chunkCoordinate != null) {
+            map.generateChunk(chunkCoordinate.getX(), chunkCoordinate.getY());
+            resetDrawingValues();
+        }
+
         repaint();
     }
 
@@ -84,28 +92,23 @@ public class GridViewer extends JComponent implements ActionListener {
                     for (int tileY = 0; tileY < map.getChunkSize(); tileY++) {
                         for (int tileX = 0; tileX < map.getChunkSize(); tileX++) {
                             Tile currentTile = currentChunk.getTileGrid()[tileY][tileX];
-                            g.setColor(currentTile.getTileConfig().getTileColor());
-                            int tileDrawingX = chunkDrawingX + (tileX * tileDrawSize);
-                            int tileDrawingY = chunkDrawingY + (tileY * tileDrawSize);
-                            g.fillRect(tileDrawingX, tileDrawingY, tileDrawSize, tileDrawSize);
-
-//                            if(tileX == 0 || tileY == 0 || tileX == map.getChunkSize() - 1 || tileY == map.getChunkSize() - 1) {
-//                                g.setColor(Color.WHITE);
-//                                g.drawString(String.valueOf((int) currentTile.getHeight()), tileDrawingX + (tileDrawSize / 3), tileDrawingY + (tileDrawSize / 2));
-//                            }
-//                            g.setColor(Color.WHITE);
-//                            g.drawRect(tileDrawingX, tileDrawingY, tileDrawSize, tileDrawSize);
+                            if(currentTile != null) {
+                                g.setColor(currentTile.getTileConfig().getTileColor());
+                                int tileDrawingX = chunkDrawingX + (tileX * tileDrawSize);
+                                int tileDrawingY = chunkDrawingY + (tileY * tileDrawSize);
+                                g.fillRect(tileDrawingX, tileDrawingY, tileDrawSize, tileDrawSize);
+                            }
                         }
                     }
-                }
 
-                // Draw chunk bounds
-                if(x == 0 && y == 0) {
-                    g.setColor(Color.RED);
-                } else {
-                    g.setColor(currentChunk.getRegionConfig().getRegionColor());
+                    // Draw chunk bounds
+                    if(x == 0 && y == 0) {
+                        g.setColor(Color.RED);
+                    } else {
+                        g.setColor(currentChunk.getRegionConfig().getRegionColor());
+                    }
+                    g.drawRect(chunkDrawingX, chunkDrawingY, chunkDrawSize, chunkDrawSize);
                 }
-                g.drawRect(chunkDrawingX, chunkDrawingY, chunkDrawSize, chunkDrawSize);
             }
         }
     }

@@ -8,7 +8,7 @@ public class DiamondSquareTest {
 
     @Test
     public void testDiamondSquare() {
-        printHeightArray(DiamondSquare.getHeightMapWithQuadrants(17, 20, 50, 10, 80, (short) 345));
+        printHeightArray(DiamondSquare.getHeightMapWithQuadrants(17, 20, 50, 10, 80, 0, 100, (short) 345));
     }
 
 }

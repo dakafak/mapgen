@@ -6,8 +6,6 @@ import dev.fanger.mapgen.generation.DiamondSquare;
 import dev.fanger.mapgen.util.ChunkGrid;
 import dev.fanger.mapgen.util.SeedGen;
 
-import static dev.fanger.mapgen.generation.DiamondSquare.MAX_HEIGHT;
-
 public class Map {
 
     private int chunkSize;
@@ -40,16 +38,19 @@ public class Map {
         }
 
         RegionConfig randomRegionConfig = mapConfig.getRandomRegionConfig(chunkX, chunkY, seed);
+        double maxHeight = randomRegionConfig.getMaxHeight();
+        double minHeight = randomRegionConfig.getMinHeight();
         Chunk newChunk = new Chunk(chunkX, chunkY, chunkSize, randomRegionConfig);
 
         // Quadrant heights
-        double newQ1Height = getQ1Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY - 1, seed, MAX_HEIGHT));
-        double newQ2Height = getQ2Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY - 1, seed, MAX_HEIGHT));
-        double newQ3Height = getQ3Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY + 1, seed, MAX_HEIGHT));
-        double newQ4Height = getQ4Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY + 1, seed, MAX_HEIGHT));
+        double newQ1Height = getQ1Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY - 1, seed, maxHeight));
+        double newQ2Height = getQ2Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY - 1, seed, maxHeight));
+        double newQ3Height = getQ3Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY + 1, seed, maxHeight));
+        double newQ4Height = getQ4Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY + 1, seed, maxHeight));
 
         // get tile height map
-        double[][] newChunkHeightMap = DiamondSquare.getHeightMapWithQuadrants(chunkSize, newQ1Height, newQ2Height, newQ3Height, newQ4Height, seed);
+        //TODO replace the 100 with the maxheight, maybe...
+        double[][] newChunkHeightMap = DiamondSquare.getHeightMapWithQuadrants(chunkSize, newQ1Height, newQ2Height, newQ3Height, newQ4Height, minHeight, 100, seed);
         newChunk.generate(
                 newChunkHeightMap,
                 seed,
@@ -62,7 +63,7 @@ public class Map {
         chunkGrid.setChunk(chunkX, chunkY, newChunk);
     }
 
-    private double getQ1Height(int chunkX, int chunkY, double random) {
+    private double getQ1Height(int chunkX, int chunkY, double maxRandom) {
         if(chunkGrid.getChunk(chunkX, chunkY - 1) != null) {
             return chunkGrid.getChunk(chunkX, chunkY - 1).getQ4Height();
         } else if(chunkGrid.getChunk(chunkX + 1, chunkY - 1) != null) {
@@ -70,7 +71,7 @@ public class Map {
         } else if(chunkGrid.getChunk(chunkX + 1, chunkY) != null) {
             return chunkGrid.getChunk(chunkX + 1, chunkY).getQ2Height();
         } else {
-            return random;
+            return maxRandom;
         }
     }
 

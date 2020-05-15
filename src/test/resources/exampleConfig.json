@@ -55,6 +55,8 @@
       "waterTile": 1,
       "shoreTile": 2,
       "landTile": 3,
+      "minHeight": 40,
+      "maxHeight": 80,
       "resources": [1],
       "groupResources": true,
       "color": "#00AA00"
@@ -65,10 +67,25 @@
       "waterTile": 1,
       "shoreTile": 4,
       "landTile": 5,
-      "spawnDistance": 5,
+      "minHeight": 40,
+      "maxHeight": 100,
+      "spawnDistance": 10,
       "resources": [],
       "groupResources": true,
       "color": "#000000"
+    },
+    {
+      "id": 3,
+      "name": "ocean",
+      "waterTile": 1,
+      "shoreTile": 2,
+      "landTile": 3,
+      "minHeight": 0,
+      "maxHeight": 51,
+      "spawnDistance": 5,
+      "resources": [],
+      "groupResources": false,
+      "color": "#0000FF"
     }
   ]
 }
