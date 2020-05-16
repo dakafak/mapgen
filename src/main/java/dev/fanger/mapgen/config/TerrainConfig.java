@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import java.awt.Color;
 import java.util.Map;
 
-public class RegionConfig {
+public class TerrainConfig {
 
     private static final String JSON_ID = "id";
     private static final String JSON_NAME = "name";
@@ -25,7 +25,7 @@ public class RegionConfig {
     private double centerSpawnDistance;
     private Color regionColor;
 
-    public RegionConfig(JSONObject jsonObject, Map<Integer, TileConfig> tileConfigMap) {
+    public TerrainConfig(JSONObject jsonObject, Map<Integer, TileConfig> tileConfigMap) {
         id = jsonObject.getInt(JSON_ID);
         name = jsonObject.getString(JSON_NAME);
 

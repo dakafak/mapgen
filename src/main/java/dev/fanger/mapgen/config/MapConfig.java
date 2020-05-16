@@ -17,13 +17,13 @@ public class MapConfig {
 
     private double spawnHeight;
 
-    private List<RegionConfig> heightOrderedRegionConfigList;
-    private LinkedHashMap<Integer, RegionConfig> regionConfigMap;
+    private List<TerrainConfig> heightOrderedTerrainConfigList;
+    private LinkedHashMap<Integer, TerrainConfig> regionConfigMap;
     private LinkedHashMap<Integer, TileConfig> tileConfigMap;
     //TODO add resource map and resources -- also enum for resource type similar to physical properties
 
     public MapConfig(JSONObject jsonObject) {
-        heightOrderedRegionConfigList = new ArrayList<>();
+        heightOrderedTerrainConfigList = new ArrayList<>();
         regionConfigMap = new LinkedHashMap<>();
         tileConfigMap = new LinkedHashMap<>();
 
@@ -37,12 +37,12 @@ public class MapConfig {
         JSONArray allRegionConfigs = jsonObject.getJSONArray(JSON_KEY_TERRAIN);
         for(int i = 0; i < allRegionConfigs.length(); i++) {
             JSONObject regionConfigJSONObject = allRegionConfigs.getJSONObject(i);
-            RegionConfig regionConfig = new RegionConfig(regionConfigJSONObject, tileConfigMap);
-            heightOrderedRegionConfigList.add(regionConfig);
-            regionConfigMap.put(regionConfig.getId(), regionConfig);
+            TerrainConfig terrainConfig = new TerrainConfig(regionConfigJSONObject, tileConfigMap);
+            heightOrderedTerrainConfigList.add(terrainConfig);
+            regionConfigMap.put(terrainConfig.getId(), terrainConfig);
         }
 
-        heightOrderedRegionConfigList.sort((o1, o2) -> {
+        heightOrderedTerrainConfigList.sort((o1, o2) -> {
             // Values are reversed to sort from largest to smallest
             if(o1.getSpawnHeight() < o2.getSpawnHeight()) {
                 return 1;
@@ -54,17 +54,17 @@ public class MapConfig {
         spawnHeight = jsonObject.getDouble(JSON_KEY_SPAWN_HEIGHT);
     }
 
-    public RegionConfig getRegionConfigForTile(double height) {
-        for(RegionConfig regionConfig : heightOrderedRegionConfigList) {
-            if(height >= regionConfig.getSpawnHeight()) {
-                return regionConfig;
+    public TerrainConfig getRegionConfigForTile(double height) {
+        for(TerrainConfig terrainConfig : heightOrderedTerrainConfigList) {
+            if(height >= terrainConfig.getSpawnHeight()) {
+                return terrainConfig;
             }
         }
 
         return null;
     }
 
-    public RegionConfig getRegionConfig(int id) {
+    public TerrainConfig getRegionConfig(int id) {
         return regionConfigMap.get(id);
     }
 
@@ -72,7 +72,7 @@ public class MapConfig {
         return tileConfigMap.get(id);
     }
 
-    public Collection<RegionConfig> getRegionConfigs() {
+    public Collection<TerrainConfig> getRegionConfigs() {
         return regionConfigMap.values();
     }
 
@@ -84,14 +84,14 @@ public class MapConfig {
         return spawnHeight;
     }
 
-    public List<RegionConfig> getHeightOrderedRegionConfigList() {
-        return heightOrderedRegionConfigList;
+    public List<TerrainConfig> getHeightOrderedTerrainConfigList() {
+        return heightOrderedTerrainConfigList;
     }
 
     @Override
     public String toString() {
         return "MapConfig{" +
-                "heightOrderedRegionConfigList=" + heightOrderedRegionConfigList +
+                "heightOrderedTerrainConfigList=" + heightOrderedTerrainConfigList +
                 ", regionConfigMap=" + regionConfigMap +
                 ", tileConfigMap=" + tileConfigMap +
                 '}';

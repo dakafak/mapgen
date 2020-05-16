@@ -1,7 +1,7 @@
 package dev.fanger.mapgen.map;
 
 import dev.fanger.mapgen.config.MapConfig;
-import dev.fanger.mapgen.config.RegionConfig;
+import dev.fanger.mapgen.config.TerrainConfig;
 import dev.fanger.mapgen.config.TileConfig;
 
 public class Chunk {
@@ -47,11 +47,11 @@ public class Chunk {
                 int tileY = (chunkY * size) + y;
                 double height = tileHeightMaps[y][x];
 
-                RegionConfig regionConfigForTile = mapConfig.getRegionConfigForTile(height);
-                TileConfig tileConfig = regionConfigForTile.getTileConfig();
+                TerrainConfig terrainConfigForTile = mapConfig.getRegionConfigForTile(height);
+                TileConfig tileConfig = terrainConfigForTile.getTileConfig();
 
                 // Place new tile with region config, blending or current chunk
-                Tile tile = new Tile(tileX, tileY, height, tileConfig, regionConfigForTile, this);
+                Tile tile = new Tile(tileX, tileY, height, tileConfig, terrainConfigForTile, this);
                 tileGrid[y][x] = tile;
             }
         }
