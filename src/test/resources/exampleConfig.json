@@ -1,5 +1,5 @@
 {
-  "spawnHeight": 70.0,
+  "spawnHeight": 60,
   "tiles": [
     {
       "id": 1,
@@ -42,58 +42,45 @@
       "id": 1,
       "name": "tree",
       "type": "WOOD",
-      "color": "#00AA00",
+      "color": "#006600",
       "image": "C:\\example\\path\\to\\image"
     }
   ],
   "terrain": [
     {
-      "id": 1,
-      "name": "grassland",
-      "tile": 3,
-      "spawnHeight": 70,
-      "resources": [1],
-      "groupResources": true,
-      "color": "#00AA00"
-    },
-    {
-      "id": 5,
-      "name": "rocky",
-      "tile": 4,
-      "spawnHeight": 80,
-      "spawnDistance": 10,
-      "resources": [],
-      "groupResources": true,
-      "color": "#888888"
-    },
-    {
-      "id": 2,
-      "name": "snowy",
-      "tile": 5,
-      "spawnHeight": 90,
-      "spawnDistance": 10,
-      "resources": [],
-      "groupResources": true,
-      "color": "#000000"
-    },
-    {
-      "id": 3,
       "name": "water",
       "tile": 1,
       "spawnHeight": 0,
-      "spawnDistance": 5,
       "resources": [],
-      "groupResources": false,
       "color": "#0000FF"
     },
     {
-      "id": 4,
       "name": "shore",
       "tile": 2,
-      "spawnHeight": 60,
-      "resources": [1],
-      "groupResources": true,
+      "spawnHeight": 50,
+      "resources": [],
       "color": "#00AA00"
+    },
+    {
+      "name": "grassland",
+      "tile": 3,
+      "spawnHeight": 55,
+      "resources": [1],
+      "color": "#00AA00"
+    },
+    {
+      "name": "rocky",
+      "tile": 4,
+      "spawnHeight": 80,
+      "resources": [],
+      "color": "#888888"
+    },
+    {
+      "name": "snowy",
+      "tile": 5,
+      "spawnHeight": 90,
+      "resources": [],
+      "color": "#000000"
     }
   ]
 }

@@ -1,6 +1,7 @@
 package dev.fanger.mapgen;
 
 import dev.fanger.mapgen.map.Chunk;
+import dev.fanger.mapgen.map.Resource;
 import dev.fanger.mapgen.map.location.Point;
 import dev.fanger.mapgen.map.Map;
 import dev.fanger.mapgen.map.Tile;
@@ -26,8 +27,9 @@ public class GridViewer extends JComponent implements ActionListener {
         timer.start();
     }
 
-    private int chunkDrawSize;
-    private int tileDrawSize;
+    private double chunkDrawSize;
+    private double tileDrawSize;
+    private double resourceDrawSize;
     private int middleX;
     private int middleY;
     private int gridStartX;
@@ -45,11 +47,12 @@ public class GridViewer extends JComponent implements ActionListener {
         } else {
             chunkDrawSize = drawingHeight;
         }
-        tileDrawSize = (int) Math.round((double) chunkDrawSize / map.getChunkSize());
+        tileDrawSize = chunkDrawSize / map.getChunkSize();
+        resourceDrawSize = chunkDrawSize / map.getChunkSize();
 
-        int totalDrawingWidth = map.getChunkGrid().getWidth() * chunkDrawSize;
+        int totalDrawingWidth = (int) Math.round(map.getChunkGrid().getWidth() * chunkDrawSize);
         gridStartX = middleX - totalDrawingWidth / 2;
-        int totalDrawingHeight = map.getChunkGrid().getHeight() * chunkDrawSize;
+        int totalDrawingHeight = (int) Math.round(map.getChunkGrid().getHeight() * chunkDrawSize);
         gridStartY = middleY - totalDrawingHeight / 2;
     }
 
@@ -87,8 +90,8 @@ public class GridViewer extends JComponent implements ActionListener {
         for(int y = map.getChunkGrid().getFirstY(); y < map.getChunkGrid().getLastY(); y++) {
             for(int x = map.getChunkGrid().getFirstX(); x < map.getChunkGrid().getLastX(); x++) {
                 Chunk currentChunk = map.getChunk(x, y);
-                int chunkDrawingX = gridStartX + ((x + map.getChunkGrid().getZeroX()) * chunkDrawSize);
-                int chunkDrawingY = gridStartY + ((y + map.getChunkGrid().getZeroY()) * chunkDrawSize);
+                double chunkDrawingX = gridStartX + ((x + map.getChunkGrid().getZeroX()) * chunkDrawSize);
+                double chunkDrawingY = gridStartY + ((y + map.getChunkGrid().getZeroY()) * chunkDrawSize);
 
                 if(currentChunk != null) {
                     // Draw tiles
@@ -97,9 +100,22 @@ public class GridViewer extends JComponent implements ActionListener {
                             Tile currentTile = currentChunk.getTileGrid()[tileY][tileX];
                             if(currentTile != null) {
                                 g.setColor(currentTile.getTileConfig().getTileColor());
-                                int tileDrawingX = chunkDrawingX + (tileX * tileDrawSize);
-                                int tileDrawingY = chunkDrawingY + (tileY * tileDrawSize);
-                                g.fillRect(tileDrawingX, tileDrawingY, tileDrawSize, tileDrawSize);
+                                int tileDrawingX = (int) Math.round(chunkDrawingX + (tileX * tileDrawSize));
+                                int tileDrawingY = (int) Math.round(chunkDrawingY + (tileY * tileDrawSize));
+                                g.fillRect(tileDrawingX, tileDrawingY, (int) Math.ceil(tileDrawSize), (int) Math.ceil(tileDrawSize));
+                            }
+                        }
+                    }
+
+                    // Draw resources
+                    for (int resourceY = 0; resourceY < map.getChunkSize(); resourceY++) {
+                        for (int resourceX = 0; resourceX < map.getChunkSize(); resourceX++) {
+                            Resource currentResource = currentChunk.getResourceGrid()[resourceY][resourceX];
+                            if(currentResource != null) {
+                                g.setColor(currentResource.getResourceConfig().getResourceColor());
+                                int tileDrawingX = (int) Math.round(chunkDrawingX + (resourceX * resourceDrawSize));
+                                int tileDrawingY = (int) Math.round(chunkDrawingY + (resourceY * resourceDrawSize));
+                                g.fillOval(tileDrawingX, tileDrawingY, (int) Math.ceil(resourceDrawSize), (int) Math.ceil(resourceDrawSize));
                             }
                         }
                     }
@@ -107,7 +123,7 @@ public class GridViewer extends JComponent implements ActionListener {
                     // Draw chunk bounds
                     if(x == 0 && y == 0) {
                         g.setColor(Color.RED);
-                        g.drawRect(chunkDrawingX, chunkDrawingY, chunkDrawSize, chunkDrawSize);
+                        g.drawRect((int) Math.round(chunkDrawingX), (int) Math.round(chunkDrawingY), (int) Math.round(chunkDrawSize), (int) Math.round(chunkDrawSize));
                     }
 
                 }

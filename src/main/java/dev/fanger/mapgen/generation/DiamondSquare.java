@@ -56,13 +56,13 @@ public class DiamondSquare {
 
         // Set middle spawn height to ensure a valid spawn location for the character
         if(spawnHeight >= 0) {
-            int middleOfGrid = (gridSize - 1) / 2;
-            heightMap[middleOfGrid][middleOfGrid] = spawnHeight;
+//            int middleOfGrid = (gridSize - 1) / 2;
+//            heightMap[middleOfGrid][middleOfGrid] = spawnHeight;
 
-            q1Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
-            q2Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
-            q3Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
-            q4Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
+//            q1Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
+//            q2Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
+//            q3Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
+//            q4Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
         }
 
         // Initialize corners with quadrant values
@@ -217,7 +217,6 @@ public class DiamondSquare {
 
     private static double getRandomAddFromRange(double x, double y, long seed, double range) {
         return SeedGen.randomNumberRefreshSeed(x, y, seed, range) - (range / 2);
-//        return SeedGen.randomNumberRefreshSeed(x, y, seed, range);
     }
 
     public static void printHeightArray(double[][] heightArray) {

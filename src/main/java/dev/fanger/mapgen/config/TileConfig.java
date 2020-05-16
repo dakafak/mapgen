@@ -7,11 +7,11 @@ import java.awt.Color;
 
 public class TileConfig {
 
-    private static final String JSON_ID = "id";
-    private static final String JSON_NAME = "name";
-    private static final String JSON_PHYSICAL_PROPERTY = "physical";
-    private static final String JSON_COLOR = "color";
-    private static final String JSON_TEXTURE_IMAGE_LOCATION = "image";
+    private static final String JSON_KEY_ID = "id";
+    private static final String JSON_KEY_NAME = "name";
+    private static final String JSON_KEY_PHYSICAL_PROPERTY = "physical";
+    private static final String JSON_KEY_COLOR = "color";
+    private static final String JSON_KEY_TEXTURE_IMAGE_LOCATION = "image";
 
     private int id;
     private String name;
@@ -20,11 +20,11 @@ public class TileConfig {
     private String textureImageLocation;
 
     public TileConfig(JSONObject jsonObject) {
-        id = jsonObject.getInt(JSON_ID);
-        name = jsonObject.getString(JSON_NAME);
-        tilePhysicalProperty = TilePhysicalProperty.valueOf(jsonObject.getString(JSON_PHYSICAL_PROPERTY));
-        tileColor = Color.decode(jsonObject.optString(JSON_COLOR, "#FFFFFF"));
-        textureImageLocation = jsonObject.getString(JSON_TEXTURE_IMAGE_LOCATION);
+        id = jsonObject.getInt(JSON_KEY_ID);
+        name = jsonObject.getString(JSON_KEY_NAME);
+        tilePhysicalProperty = TilePhysicalProperty.valueOf(jsonObject.getString(JSON_KEY_PHYSICAL_PROPERTY));
+        tileColor = Color.decode(jsonObject.optString(JSON_KEY_COLOR, "#FFFFFF"));
+        textureImageLocation = jsonObject.getString(JSON_KEY_TEXTURE_IMAGE_LOCATION);
     }
 
     public int getId() {

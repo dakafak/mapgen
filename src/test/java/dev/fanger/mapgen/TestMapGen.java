@@ -25,7 +25,9 @@ public class TestMapGen {
 
             long seed = 3456;
 //            long seed = SeedGen.newSeed();
-            Map map = new Map(4, mapConfig, seed);
+            // 4 seems to be the best map chunk magnitude, 5 also seems ok
+            // 6 and 7 still look good but are waaaay too big for a game
+            Map map = new Map(5, mapConfig, seed);
 
             JFrame viewerFrame = new JFrame();
             viewerFrame.setSize(800, 400);

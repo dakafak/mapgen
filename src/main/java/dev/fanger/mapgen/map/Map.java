@@ -36,21 +36,39 @@ public class Map {
 
         Chunk newChunk = new Chunk(chunkX, chunkY, chunkSize);
 
+        double q1Height;
+        double q2Height;
+        double q3Height;
+        double q4Height;
+
+        if(chunkX == 0 && chunkY == 0) {
+            double startingPointRange = 10;
+            q1Height = mapConfig.getSpawnHeight() + (SeedGen.randomNumberRefreshSeed(chunkX + 1, chunkY - 1, seed, startingPointRange) - (startingPointRange / 2));
+            q2Height = mapConfig.getSpawnHeight() + (SeedGen.randomNumberRefreshSeed(chunkX - 1, chunkY - 1, seed, startingPointRange) - (startingPointRange / 2));
+            q3Height = mapConfig.getSpawnHeight() + (SeedGen.randomNumberRefreshSeed(chunkX - 1, chunkY + 1, seed, startingPointRange) - (startingPointRange / 2));
+            q4Height = mapConfig.getSpawnHeight() + (SeedGen.randomNumberRefreshSeed(chunkX + 1, chunkY + 1, seed, startingPointRange) - (startingPointRange / 2));
+        } else {
+            q1Height = getQ1Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX + 1, chunkY - 1, seed, 100));
+            q2Height = getQ2Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX - 1, chunkY - 1, seed, 100));
+            q3Height = getQ3Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX - 1, chunkY + 1, seed, 100));
+            q4Height = getQ4Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX + 1, chunkY + 1, seed, 100));
+        }
+
         // get tile height map with corner quadrant heights and nearby edges from any surrounding chunks -- minus corners as those are above
         double[][] newChunkHeightMap = DiamondSquare.getDiamondSquareHeightMap(
                 chunkSize,
                 seed,
                 chunkX == 0 && chunkY == 0 ? mapConfig.getSpawnHeight() : -1,
-                getQ1Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX + 1, chunkY - 1, seed, 100)),
-                getQ2Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX - 1, chunkY - 1, seed, 100)),
-                getQ3Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX - 1, chunkY + 1, seed, 100)),
-                getQ4Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX + 1, chunkY + 1, seed, 100)),
+                q1Height,
+                q2Height,
+                q3Height,
+                q4Height,
                 getHeightArray(Direction.NORTH, chunkX, chunkY),
                 getHeightArray(Direction.EAST, chunkX, chunkY),
                 getHeightArray(Direction.SOUTH, chunkX, chunkY),
                 getHeightArray(Direction.WEST, chunkX, chunkY));
 
-        newChunk.generate(newChunkHeightMap, mapConfig);
+        newChunk.generate(newChunkHeightMap, seed, mapConfig);
         chunkGrid.setChunk(chunkX, chunkY, newChunk);
     }
 

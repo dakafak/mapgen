@@ -12,20 +12,19 @@ public class MapConfig {
 
     private static final String JSON_KEY_TILES = "tiles";
     private static final String JSON_KEY_TERRAIN = "terrain";
-    private static final String JSON_KEY_GROUP_REGIONS = "groupRegions";
+    private static final String JSON_KEY_RESOURCES = "resources";
     private static final String JSON_KEY_SPAWN_HEIGHT = "spawnHeight";
 
     private double spawnHeight;
 
-    private List<TerrainConfig> heightOrderedTerrainConfigList;
-    private LinkedHashMap<Integer, TerrainConfig> regionConfigMap;
     private LinkedHashMap<Integer, TileConfig> tileConfigMap;
-    //TODO add resource map and resources -- also enum for resource type similar to physical properties
+    private LinkedHashMap<Integer, ResourceConfig> resourceConfigMap;
+    private List<TerrainConfig> heightOrderedTerrainConfigList;
 
     public MapConfig(JSONObject jsonObject) {
-        heightOrderedTerrainConfigList = new ArrayList<>();
-        regionConfigMap = new LinkedHashMap<>();
         tileConfigMap = new LinkedHashMap<>();
+        resourceConfigMap = new LinkedHashMap<>();
+        heightOrderedTerrainConfigList = new ArrayList<>();
 
         JSONArray allTileConfigs = jsonObject.getJSONArray(JSON_KEY_TILES);
         for(int i = 0; i < allTileConfigs.length(); i++) {
@@ -34,12 +33,18 @@ public class MapConfig {
             tileConfigMap.put(tileConfig.getId(), tileConfig);
         }
 
+        JSONArray allResources = jsonObject.getJSONArray(JSON_KEY_RESOURCES);
+        for(int i = 0; i < allResources.length(); i++) {
+            JSONObject resourceJSONObject = allResources.getJSONObject(i);
+            ResourceConfig resourceConfig = new ResourceConfig(resourceJSONObject);
+            resourceConfigMap.put(resourceConfig.getId(), resourceConfig);
+        }
+
         JSONArray allRegionConfigs = jsonObject.getJSONArray(JSON_KEY_TERRAIN);
         for(int i = 0; i < allRegionConfigs.length(); i++) {
             JSONObject regionConfigJSONObject = allRegionConfigs.getJSONObject(i);
-            TerrainConfig terrainConfig = new TerrainConfig(regionConfigJSONObject, tileConfigMap);
+            TerrainConfig terrainConfig = new TerrainConfig(regionConfigJSONObject, tileConfigMap, resourceConfigMap);
             heightOrderedTerrainConfigList.add(terrainConfig);
-            regionConfigMap.put(terrainConfig.getId(), terrainConfig);
         }
 
         heightOrderedTerrainConfigList.sort((o1, o2) -> {
@@ -64,16 +69,8 @@ public class MapConfig {
         return null;
     }
 
-    public TerrainConfig getRegionConfig(int id) {
-        return regionConfigMap.get(id);
-    }
-
     public TileConfig getTileConfig(int id) {
         return tileConfigMap.get(id);
-    }
-
-    public Collection<TerrainConfig> getRegionConfigs() {
-        return regionConfigMap.values();
     }
 
     public Collection<TileConfig> getTileConfigs() {
@@ -92,7 +89,6 @@ public class MapConfig {
     public String toString() {
         return "MapConfig{" +
                 "heightOrderedTerrainConfigList=" + heightOrderedTerrainConfigList +
-                ", regionConfigMap=" + regionConfigMap +
                 ", tileConfigMap=" + tileConfigMap +
                 '}';
     }
