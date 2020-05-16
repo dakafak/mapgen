@@ -1,6 +1,5 @@
 package dev.fanger.mapgen.config;
 
-import dev.fanger.mapgen.util.SeedGen;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,22 +11,19 @@ import java.util.List;
 public class MapConfig {
 
     private static final String JSON_KEY_TILES = "tiles";
-    private static final String JSON_KEY_REGIONS = "regions";
+    private static final String JSON_KEY_TERRAIN = "terrain";
     private static final String JSON_KEY_GROUP_REGIONS = "groupRegions";
-    private static final String JSON_KEY_WATER_LEVEL = "waterLevel";
-    private static final String JSON_KEY_SHORE_LEVEL = "shoreLevel";
+    private static final String JSON_KEY_SPAWN_HEIGHT = "spawnHeight";
 
-    private boolean groupRegions;//TODO probably remove gorup regions and try to group more off random number generation?
-    private double waterLevel;
-    private double shoreLevel;
+    private double spawnHeight;
 
-    private List<RegionConfig> regionConfigList;
+    private List<RegionConfig> heightOrderedRegionConfigList;
     private LinkedHashMap<Integer, RegionConfig> regionConfigMap;
     private LinkedHashMap<Integer, TileConfig> tileConfigMap;
     //TODO add resource map and resources -- also enum for resource type similar to physical properties
 
     public MapConfig(JSONObject jsonObject) {
-        regionConfigList = new ArrayList<>();
+        heightOrderedRegionConfigList = new ArrayList<>();
         regionConfigMap = new LinkedHashMap<>();
         tileConfigMap = new LinkedHashMap<>();
 
@@ -38,31 +34,34 @@ public class MapConfig {
             tileConfigMap.put(tileConfig.getId(), tileConfig);
         }
 
-        JSONArray allRegionConfigs = jsonObject.getJSONArray(JSON_KEY_REGIONS);
+        JSONArray allRegionConfigs = jsonObject.getJSONArray(JSON_KEY_TERRAIN);
         for(int i = 0; i < allRegionConfigs.length(); i++) {
             JSONObject regionConfigJSONObject = allRegionConfigs.getJSONObject(i);
             RegionConfig regionConfig = new RegionConfig(regionConfigJSONObject, tileConfigMap);
-            regionConfigList.add(regionConfig);
+            heightOrderedRegionConfigList.add(regionConfig);
             regionConfigMap.put(regionConfig.getId(), regionConfig);
         }
 
-        groupRegions = jsonObject.optBoolean(JSON_KEY_GROUP_REGIONS, false);
-        waterLevel = jsonObject.getDouble(JSON_KEY_WATER_LEVEL);
-        shoreLevel = jsonObject.getDouble(JSON_KEY_SHORE_LEVEL);
+        heightOrderedRegionConfigList.sort((o1, o2) -> {
+            // Values are reversed to sort from largest to smallest
+            if(o1.getSpawnHeight() < o2.getSpawnHeight()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        spawnHeight = jsonObject.getDouble(JSON_KEY_SPAWN_HEIGHT);
     }
 
-    public RegionConfig getRandomRegionConfig(int chunkX, int chunkY, short seed) {
-        //TODO should do something here to better group regions... maybe by pseudo random numbers..
-        List<RegionConfig> availableRandomConfigs = new ArrayList<>();
-        for(RegionConfig regionConfig : regionConfigList) {
-            double distanceFromCenter = Math.sqrt(Math.pow(chunkX, 2) + Math.pow(chunkY, 2));
-            if(distanceFromCenter >= regionConfig.getCenterSpawnDistance()) {
-                availableRandomConfigs.add(regionConfig);
+    public RegionConfig getRegionConfigForTile(double height) {
+        for(RegionConfig regionConfig : heightOrderedRegionConfigList) {
+            if(height >= regionConfig.getSpawnHeight()) {
+                return regionConfig;
             }
         }
 
-        int randomConfigIndex = (int) Math.floor(SeedGen.randomNumber(chunkX, chunkY, seed, availableRandomConfigs.size()));
-        return availableRandomConfigs.get(randomConfigIndex);
+        return null;
     }
 
     public RegionConfig getRegionConfig(int id) {
@@ -81,18 +80,18 @@ public class MapConfig {
         return tileConfigMap.values();
     }
 
-    public double getWaterLevel() {
-        return waterLevel;
+    public double getSpawnHeight() {
+        return spawnHeight;
     }
 
-    public double getShoreLevel() {
-        return shoreLevel;
+    public List<RegionConfig> getHeightOrderedRegionConfigList() {
+        return heightOrderedRegionConfigList;
     }
 
     @Override
     public String toString() {
         return "MapConfig{" +
-                "regionConfigList=" + regionConfigList +
+                "heightOrderedRegionConfigList=" + heightOrderedRegionConfigList +
                 ", regionConfigMap=" + regionConfigMap +
                 ", tileConfigMap=" + tileConfigMap +
                 '}';

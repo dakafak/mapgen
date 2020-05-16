@@ -1,8 +1,8 @@
 package dev.fanger.mapgen.map;
 
 import dev.fanger.mapgen.config.MapConfig;
-import dev.fanger.mapgen.config.RegionConfig;
 import dev.fanger.mapgen.generation.DiamondSquare;
+import dev.fanger.mapgen.map.location.Direction;
 import dev.fanger.mapgen.util.ChunkGrid;
 import dev.fanger.mapgen.util.SeedGen;
 
@@ -11,20 +11,17 @@ public class Map {
     private int chunkSize;
     private ChunkGrid chunkGrid;
     private MapConfig mapConfig;
-    private short seed;
+    private long seed;
 
     /**
-     * Values chunkSize works with
-     * 2D square array of width and height 2n + 1
-     * 5, 9, 17
+     * Chunk size will equal (2^chunkSizeMagnitude + 1)
      *
-     * @param chunkSize
+     * @param chunkSizeMagnitude
      * @param mapConfig
      */
-    public Map(int chunkSize, MapConfig mapConfig, short seed) {
+    public Map(int chunkSizeMagnitude, MapConfig mapConfig, long seed) {
         this.chunkGrid = new ChunkGrid();
-        this.chunkSize = chunkSize;
-        //TODO might have a problem with non-odd chunk sizes
+        this.chunkSize = (int) Math.pow(2, chunkSizeMagnitude) + 1;
         this.mapConfig = mapConfig;
         this.seed = seed;
 
@@ -37,29 +34,23 @@ public class Map {
             return;
         }
 
-        RegionConfig randomRegionConfig = mapConfig.getRandomRegionConfig(chunkX, chunkY, seed);
-        double maxHeight = randomRegionConfig.getMaxHeight();
-        double minHeight = randomRegionConfig.getMinHeight();
-        Chunk newChunk = new Chunk(chunkX, chunkY, chunkSize, randomRegionConfig);
+        Chunk newChunk = new Chunk(chunkX, chunkY, chunkSize);
 
-        // Quadrant heights
-        double newQ1Height = getQ1Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY - 1, seed, maxHeight));
-        double newQ2Height = getQ2Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY - 1, seed, maxHeight));
-        double newQ3Height = getQ3Height(chunkX, chunkY, SeedGen.randomNumber(chunkX - 1, chunkY + 1, seed, maxHeight));
-        double newQ4Height = getQ4Height(chunkX, chunkY, SeedGen.randomNumber(chunkX + 1, chunkY + 1, seed, maxHeight));
-
-        // get tile height map
-        //TODO replace the 100 with the maxheight, maybe...
-        double[][] newChunkHeightMap = DiamondSquare.getHeightMapWithQuadrants(chunkSize, newQ1Height, newQ2Height, newQ3Height, newQ4Height, minHeight, 100, seed);
-        newChunk.generate(
-                newChunkHeightMap,
+        // get tile height map with corner quadrant heights and nearby edges from any surrounding chunks -- minus corners as those are above
+        double[][] newChunkHeightMap = DiamondSquare.getDiamondSquareHeightMap(
+                chunkSize,
                 seed,
-                mapConfig.getWaterLevel(),
-                mapConfig.getShoreLevel(),
-                getChunk(chunkX, chunkY - 1),
-                getChunk(chunkX, chunkY + 1),
-                getChunk(chunkX + 1, chunkY),
-                getChunk(chunkX - 1, chunkY));
+                chunkX == 0 && chunkY == 0 ? mapConfig.getSpawnHeight() : -1,
+                getQ1Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX + 1, chunkY - 1, seed, 100)),
+                getQ2Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX - 1, chunkY - 1, seed, 100)),
+                getQ3Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX - 1, chunkY + 1, seed, 100)),
+                getQ4Height(chunkX, chunkY, SeedGen.randomNumberRefreshSeed(chunkX + 1, chunkY + 1, seed, 100)),
+                getHeightArray(Direction.NORTH, chunkX, chunkY),
+                getHeightArray(Direction.EAST, chunkX, chunkY),
+                getHeightArray(Direction.SOUTH, chunkX, chunkY),
+                getHeightArray(Direction.WEST, chunkX, chunkY));
+
+        newChunk.generate(newChunkHeightMap, mapConfig);
         chunkGrid.setChunk(chunkX, chunkY, newChunk);
     }
 
@@ -111,6 +102,52 @@ public class Map {
         }
     }
 
+    /**
+     * Get an array of edge heights for the new chunk based on the direction of the new chunk
+     * This does not include corner values so the size of this array will be {@link #chunkSize} - 2
+     * This array will always be ordered left to right and top to bottom
+     *
+     * @param newChunkX
+     * @param newChunkY
+     * @return
+     */
+    private double[] getHeightArray(Direction direction, int newChunkX, int newChunkY) {
+        Chunk chunk = null;
+
+        if(direction == Direction.NORTH) {
+            chunk = chunkGrid.getChunk(newChunkX, newChunkY - 1);
+        } else if(direction == Direction.EAST) {
+            chunk = chunkGrid.getChunk(newChunkX + 1, newChunkY);
+        } else if(direction == Direction.SOUTH) {
+            chunk = chunkGrid.getChunk(newChunkX, newChunkY + 1);
+        } else if(direction == Direction.WEST) {
+            chunk = chunkGrid.getChunk(newChunkX - 1, newChunkY);
+        }
+
+        if(chunk != null) {
+            int edgeArraySize = chunkSize - 2;
+
+            // We don't want to include corner values so subtract 2
+            double[] heightArray = new double[edgeArraySize];
+
+            // Get values from chunk to fill the new height array
+            for(int i = 0; i < edgeArraySize; i++) {
+                if(direction == Direction.NORTH) {
+                    heightArray[i] = chunk.getTileGrid()[chunkSize - 1][i + 1].getHeight();
+                } else if(direction == Direction.EAST) {
+                    heightArray[i] = chunk.getTileGrid()[i + 1][0].getHeight();
+                } else if(direction == Direction.SOUTH) {
+                    heightArray[i] = chunk.getTileGrid()[0][i + 1].getHeight();
+                } else if(direction == Direction.WEST) {
+                    heightArray[i] = chunk.getTileGrid()[i + 1][chunkSize - 1].getHeight();
+                }
+            }
+
+            return heightArray;
+        }
+
+        return null;
+    }
 
     public Chunk getChunk(double gameX, double gameY) {
         return chunkGrid.getChunk((int) Math.floor(gameX / chunkSize), (int) Math.floor(gameY / chunkSize));

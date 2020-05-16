@@ -47,11 +47,11 @@ public class ChunkGridTest {
         ChunkGrid chunkGrid = new ChunkGrid();
         assertNull(chunkGrid.getChunk(-3, 5));
 
-        Chunk testChunk = new Chunk(-3, 5, 5, null);
+        Chunk testChunk = new Chunk(-3, 5, 5);
         chunkGrid.setChunk(-3, 5, testChunk);
         assertNotNull(chunkGrid.getChunk(-3, 5));
 
-        Chunk anotherChunk = new Chunk(16, -2, 5, null);
+        Chunk anotherChunk = new Chunk(16, -2, 5);
         chunkGrid.setChunk(16, -2, anotherChunk);
         assertNotNull(chunkGrid.getChunk(16, -2));
     }

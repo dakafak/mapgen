@@ -1,11 +1,11 @@
-package dev.fanger.mapgen.map;
+package dev.fanger.mapgen.map.location;
 
-public class ChunkCoordinate {
+public class Point {
 
     private int x;
     private int y;
 
-    public ChunkCoordinate(int x, int y) {
+    public Point(int x, int y) {
         this.x = x;
         this.y = y;
     }

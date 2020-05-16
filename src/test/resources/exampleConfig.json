@@ -1,7 +1,5 @@
 {
-  "groupRegions": true,
-  "waterLevel": 50.0,
-  "shoreLevel": 52.0,
+  "spawnHeight": 70.0,
   "tiles": [
     {
       "id": 1,
@@ -26,14 +24,14 @@
     },
     {
       "id": 4,
-      "name": "rockyBeach",
+      "name": "rocky",
       "physical": "GROUND",
       "color": "#888888",
       "image": "C:\\example\\path\\to\\image"
     },
     {
       "id": 5,
-      "name": "snowyGrass",
+      "name": "snowy",
       "physical": "GROUND",
       "color": "#CCCCCC",
       "image": "C:\\example\\path\\to\\image"
@@ -48,27 +46,31 @@
       "image": "C:\\example\\path\\to\\image"
     }
   ],
-  "regions": [
+  "terrain": [
     {
       "id": 1,
       "name": "grassland",
-      "waterTile": 1,
-      "shoreTile": 2,
-      "landTile": 3,
-      "minHeight": 40,
-      "maxHeight": 80,
+      "tile": 3,
+      "spawnHeight": 70,
       "resources": [1],
       "groupResources": true,
       "color": "#00AA00"
     },
     {
+      "id": 5,
+      "name": "rocky",
+      "tile": 4,
+      "spawnHeight": 80,
+      "spawnDistance": 10,
+      "resources": [],
+      "groupResources": true,
+      "color": "#888888"
+    },
+    {
       "id": 2,
-      "name": "snow",
-      "waterTile": 1,
-      "shoreTile": 4,
-      "landTile": 5,
-      "minHeight": 40,
-      "maxHeight": 100,
+      "name": "snowy",
+      "tile": 5,
+      "spawnHeight": 90,
       "spawnDistance": 10,
       "resources": [],
       "groupResources": true,
@@ -76,16 +78,22 @@
     },
     {
       "id": 3,
-      "name": "ocean",
-      "waterTile": 1,
-      "shoreTile": 2,
-      "landTile": 3,
-      "minHeight": 0,
-      "maxHeight": 51,
+      "name": "water",
+      "tile": 1,
+      "spawnHeight": 0,
       "spawnDistance": 5,
       "resources": [],
       "groupResources": false,
       "color": "#0000FF"
+    },
+    {
+      "id": 4,
+      "name": "shore",
+      "tile": 2,
+      "spawnHeight": 60,
+      "resources": [1],
+      "groupResources": true,
+      "color": "#00AA00"
     }
   ]
 }

@@ -3,6 +3,7 @@ package dev.fanger.mapgen;
 import dev.fanger.mapgen.config.MapConfig;
 import dev.fanger.mapgen.map.Map;
 import dev.fanger.mapgen.util.ConfigLoader;
+import dev.fanger.mapgen.util.SeedGen;
 import org.json.JSONObject;
 
 import javax.swing.JFrame;
@@ -22,7 +23,9 @@ public class TestMapGen {
             MapConfig mapConfig = new MapConfig(loadedJsonConfig);
             System.out.println(mapConfig);
 
-            Map map = new Map(17, mapConfig, (short) 3456);
+            long seed = 3456;
+//            long seed = SeedGen.newSeed();
+            Map map = new Map(4, mapConfig, seed);
 
             JFrame viewerFrame = new JFrame();
             viewerFrame.setSize(800, 400);
