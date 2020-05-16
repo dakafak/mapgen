@@ -58,7 +58,6 @@ public class Map {
         double[][] newChunkHeightMap = DiamondSquare.getDiamondSquareHeightMap(
                 chunkSize,
                 seed,
-                chunkX == 0 && chunkY == 0 ? mapConfig.getSpawnHeight() : -1,
                 q1Height,
                 q2Height,
                 q3Height,

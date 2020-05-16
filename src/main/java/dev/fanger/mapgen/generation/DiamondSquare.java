@@ -22,7 +22,6 @@ public class DiamondSquare {
      *
      * @param gridSize
      * @param seed
-     * @Param spawnHeight
      * @param q1Height
      * @param q2Height
      * @param q3Height
@@ -35,7 +34,6 @@ public class DiamondSquare {
      */
     public static double[][] getDiamondSquareHeightMap(int gridSize,
                                                        long seed,
-                                                       double spawnHeight,
                                                        double q1Height,
                                                        double q2Height,
                                                        double q3Height,
@@ -52,17 +50,6 @@ public class DiamondSquare {
             for(int x = 0; x < heightMap[0].length; x++) {
                 heightMap[y][x] = -1;
             }
-        }
-
-        // Set middle spawn height to ensure a valid spawn location for the character
-        if(spawnHeight >= 0) {
-//            int middleOfGrid = (gridSize - 1) / 2;
-//            heightMap[middleOfGrid][middleOfGrid] = spawnHeight;
-
-//            q1Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
-//            q2Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
-//            q3Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
-//            q4Height = spawnHeight + getRandomAddFromRange(0, 0, seed, STARTING_RANDOM_ADD_RANGE);
         }
 
         // Initialize corners with quadrant values

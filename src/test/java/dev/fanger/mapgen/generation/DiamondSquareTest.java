@@ -23,7 +23,7 @@ public class DiamondSquareTest {
     @Test
     public void testDiamondSquare() {
 //        printHeightArray(DiamondSquare.getHeightMapWithQuadrants(17, 20, 50, 10, 80, 0, 100, 345));
-        double[][] testGeneratedHeightMap = DiamondSquare.getDiamondSquareHeightMap(5, 345, 60, 70, 50, 90, 20, null, null, null, null);
+        double[][] testGeneratedHeightMap = DiamondSquare.getDiamondSquareHeightMap(5, 345, 70, 50, 90, 20, null, null, null, null);
         printHeightArray(testGeneratedHeightMap);
     }
 
