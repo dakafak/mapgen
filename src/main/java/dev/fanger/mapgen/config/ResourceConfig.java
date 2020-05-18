@@ -13,6 +13,9 @@ public class ResourceConfig {
     private static final String JSON_KEY_COLOR = "color";
     private static final String JSON_KEY_TEXTURE_IMAGE_LOCATION = "image";
 
+    //TODO add a health value to the resource config
+    //TODO add sparsity to resource config (grouping would be nice...)
+
     private int id;
     private String name;
     private ResourceType resourceType;
