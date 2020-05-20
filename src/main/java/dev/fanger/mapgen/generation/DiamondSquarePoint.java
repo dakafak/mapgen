@@ -1,6 +1,6 @@
 package dev.fanger.mapgen.generation;
 
-import dev.fanger.mapgen.map.location.Point;
+import dev.fanger.mapgen.map.location.TileCoordinate;
 
 public class DiamondSquarePoint {
 
@@ -18,8 +18,8 @@ public class DiamondSquarePoint {
         return (squareSize - 1) / 2;
     }
 
-    public Point getDiamondPoint() {
-        return new Point(x + getHalfDistance(), y + getHalfDistance());
+    public TileCoordinate getDiamondPoint() {
+        return TileCoordinate.from(x + getHalfDistance(), y + getHalfDistance());
     }
 
     public int getX() {

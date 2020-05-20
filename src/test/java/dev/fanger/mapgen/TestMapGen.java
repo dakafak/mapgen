@@ -1,9 +1,8 @@
 package dev.fanger.mapgen;
 
 import dev.fanger.mapgen.config.MapConfig;
-import dev.fanger.mapgen.map.Map;
+import dev.fanger.mapgen.map.GameMap;
 import dev.fanger.mapgen.util.ConfigLoader;
-import dev.fanger.mapgen.util.SeedGen;
 import org.json.JSONObject;
 
 import javax.swing.JFrame;
@@ -25,9 +24,9 @@ public class TestMapGen {
 
             long seed = 3456;
 //            long seed = SeedGen.newSeed();
-            // 4 seems to be the best map chunk magnitude, 5 also seems ok
+            // 4 seems to be the best gameMap chunk magnitude, 5 also seems ok
             // 6 and 7 still look good but are waaaay too big for a game
-            Map map = new Map(5, mapConfig, seed);
+            GameMap gameMap = new GameMap(5, mapConfig, seed);
 
             JFrame viewerFrame = new JFrame();
             viewerFrame.setSize(800, 400);
@@ -36,7 +35,7 @@ public class TestMapGen {
             viewerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             viewerFrame.setLayout(new BorderLayout());
 
-            GridViewer gridViewer = new GridViewer(map);
+            GridViewer gridViewer = new GridViewer(gameMap);
             viewerFrame.setContentPane(gridViewer);
             viewerFrame.addComponentListener(new ComponentListener() {
                 @Override

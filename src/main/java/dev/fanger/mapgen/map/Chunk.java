@@ -72,6 +72,14 @@ public class Chunk {
         }
     }
 
+    public int getChunkX() {
+        return chunkX;
+    }
+
+    public int getChunkY() {
+        return chunkY;
+    }
+
     public Tile[][] getTileGrid() {
         return tileGrid;
     }

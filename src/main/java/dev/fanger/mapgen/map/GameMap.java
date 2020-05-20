@@ -6,12 +6,14 @@ import dev.fanger.mapgen.map.location.Direction;
 import dev.fanger.mapgen.util.ChunkGrid;
 import dev.fanger.mapgen.util.SeedGen;
 
-public class Map {
+public class GameMap {
 
     private int chunkSize;
     private ChunkGrid chunkGrid;
     private MapConfig mapConfig;
     private long seed;
+
+    //TODO need constructor to build from saved map
 
     /**
      * Chunk size will equal (2^chunkSizeMagnitude + 1)
@@ -19,7 +21,7 @@ public class Map {
      * @param chunkSizeMagnitude
      * @param mapConfig
      */
-    public Map(int chunkSizeMagnitude, MapConfig mapConfig, long seed) {
+    public GameMap(int chunkSizeMagnitude, MapConfig mapConfig, long seed) {
         this.chunkGrid = new ChunkGrid();
         this.chunkSize = (int) Math.pow(2, chunkSizeMagnitude) + 1;
         this.mapConfig = mapConfig;
@@ -166,6 +168,14 @@ public class Map {
         return null;
     }
 
+    /**
+     * Get a chunk based on the inputted gameX and gameY
+     * These values are based on one tile being 1x1
+     *
+     * @param gameX
+     * @param gameY
+     * @return
+     */
     public Chunk getChunk(double gameX, double gameY) {
         return chunkGrid.getChunk((int) Math.floor(gameX / chunkSize), (int) Math.floor(gameY / chunkSize));
     }
@@ -178,14 +188,29 @@ public class Map {
         return chunkY * chunkSize;
     }
 
+    public double getOffsetFromChunkX(int chunkX, double gameX) {
+        return gameX - getGameX(chunkX);
+    }
+
+    public double getOffsetFromChunkY(int chunkY, double gameY) {
+        return gameY - getGameY(chunkY);
+    }
+
     public Tile getTile(double gameX, double gameY) {
         Chunk chunk = getChunk(gameX, gameY);
         return chunk.getTile(gameX, gameY);
     }
 
-    // chunk grid x and y - consider changing this
-    public Chunk getChunk(int x, int y) {
-        return chunkGrid.getChunk(x, y);
+    /**
+     * Get a chunk based on the inputted chunkX and chunkY
+     * These values are based on chunk location on the chunk grid
+     *
+     * @param chunkX
+     * @param chunkY
+     * @return
+     */
+    public Chunk getChunk(int chunkX, int chunkY) {
+        return chunkGrid.getChunk(chunkX, chunkY);
     }
 
     public ChunkGrid getChunkGrid() {

@@ -1,6 +1,6 @@
 package dev.fanger.mapgen.generation;
 
-import dev.fanger.mapgen.map.location.Point;
+import dev.fanger.mapgen.map.location.TileCoordinate;
 import dev.fanger.mapgen.util.SeedGen;
 
 import java.util.LinkedList;
@@ -120,13 +120,13 @@ public class DiamondSquare {
             // Run through all square steps
             while(!squareStepQueue.isEmpty()) {
                 DiamondSquarePoint currentDiamondSquarePoint = squareStepQueue.poll();
-                Point diamondPoint = currentDiamondSquarePoint.getDiamondPoint();
+                TileCoordinate diamondTileCoordinate = currentDiamondSquarePoint.getDiamondPoint();
 
                 // Perform square step for each location surrounding the new diamond location
-                setSquarePointHeight(initializedHeightMap, seed, randomAddRange, diamondPoint.getX(), diamondPoint.getY() - currentDiamondSquarePoint.getHalfDistance(), currentDiamondSquarePoint.getHalfDistance());
-                setSquarePointHeight(initializedHeightMap, seed, randomAddRange, diamondPoint.getX() - currentDiamondSquarePoint.getHalfDistance(), diamondPoint.getY(), currentDiamondSquarePoint.getHalfDistance());
-                setSquarePointHeight(initializedHeightMap, seed, randomAddRange, diamondPoint.getX(), diamondPoint.getY() + currentDiamondSquarePoint.getHalfDistance(), currentDiamondSquarePoint.getHalfDistance());
-                setSquarePointHeight(initializedHeightMap, seed, randomAddRange, diamondPoint.getX() + currentDiamondSquarePoint.getHalfDistance(), diamondPoint.getY(), currentDiamondSquarePoint.getHalfDistance());
+                setSquarePointHeight(initializedHeightMap, seed, randomAddRange, diamondTileCoordinate.getX(), diamondTileCoordinate.getY() - currentDiamondSquarePoint.getHalfDistance(), currentDiamondSquarePoint.getHalfDistance());
+                setSquarePointHeight(initializedHeightMap, seed, randomAddRange, diamondTileCoordinate.getX() - currentDiamondSquarePoint.getHalfDistance(), diamondTileCoordinate.getY(), currentDiamondSquarePoint.getHalfDistance());
+                setSquarePointHeight(initializedHeightMap, seed, randomAddRange, diamondTileCoordinate.getX(), diamondTileCoordinate.getY() + currentDiamondSquarePoint.getHalfDistance(), currentDiamondSquarePoint.getHalfDistance());
+                setSquarePointHeight(initializedHeightMap, seed, randomAddRange, diamondTileCoordinate.getX() + currentDiamondSquarePoint.getHalfDistance(), diamondTileCoordinate.getY(), currentDiamondSquarePoint.getHalfDistance());
             }
 
             randomAddRange = getNextScaledRandomRange(randomAddRange);
@@ -143,10 +143,10 @@ public class DiamondSquare {
                 + heightMap[diamondSquarePoint.getY() + diamondSquarePoint.getDistanceBetweenPoints()][diamondSquarePoint.getX() + diamondSquarePoint.getDistanceBetweenPoints()])
                 / 4.0;
 
-        Point diamondPoint = diamondSquarePoint.getDiamondPoint();
-        diamondHeight += getRandomAddFromRange(diamondPoint.getX(), diamondPoint.getY(), seed, randomAddRange);
+        TileCoordinate diamondTileCoordinate = diamondSquarePoint.getDiamondPoint();
+        diamondHeight += getRandomAddFromRange(diamondTileCoordinate.getX(), diamondTileCoordinate.getY(), seed, randomAddRange);
 
-        setValueOnHeightMap(heightMap, diamondPoint.getX(), diamondPoint.getY(), diamondHeight);
+        setValueOnHeightMap(heightMap, diamondTileCoordinate.getX(), diamondTileCoordinate.getY(), diamondHeight);
     }
 
     protected static void setSquarePointHeight(double[][] heightMap, long seed, double randomRange, int x, int y, int distanceToDiamondCorners) {

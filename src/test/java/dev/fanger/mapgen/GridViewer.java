@@ -1,9 +1,9 @@
 package dev.fanger.mapgen;
 
 import dev.fanger.mapgen.map.Chunk;
+import dev.fanger.mapgen.map.GameMap;
 import dev.fanger.mapgen.map.Resource;
-import dev.fanger.mapgen.map.location.Point;
-import dev.fanger.mapgen.map.Map;
+import dev.fanger.mapgen.map.location.TileCoordinate;
 import dev.fanger.mapgen.map.Tile;
 
 import javax.swing.JComponent;
@@ -16,11 +16,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GridViewer extends JComponent implements ActionListener {
 
-    private Map map;
-    private ConcurrentLinkedQueue<Point> chunksToGenerate;
+    private GameMap gameMap;
+    private ConcurrentLinkedQueue<TileCoordinate> chunksToGenerate;
 
-    public GridViewer(Map map) {
-        this.map = map;
+    public GridViewer(GameMap gameMap) {
+        this.gameMap = gameMap;
         this.chunksToGenerate = new ConcurrentLinkedQueue();
         resetDrawingValues();
         Timer timer  = new Timer(33, this);
@@ -39,20 +39,20 @@ public class GridViewer extends JComponent implements ActionListener {
         middleX = getWidth() / 2;
         middleY = getHeight() / 2;
 
-        int drawingWidth = Math.round(getWidth() / map.getChunkGrid().getWidth());
-        int drawingHeight = Math.round(getHeight() / map.getChunkGrid().getHeight());
+        int drawingWidth = Math.round(getWidth() / gameMap.getChunkGrid().getWidth());
+        int drawingHeight = Math.round(getHeight() / gameMap.getChunkGrid().getHeight());
 
         if(drawingWidth <= drawingHeight) {
             chunkDrawSize = drawingWidth;
         } else {
             chunkDrawSize = drawingHeight;
         }
-        tileDrawSize = chunkDrawSize / map.getChunkSize();
-        resourceDrawSize = chunkDrawSize / map.getChunkSize();
+        tileDrawSize = chunkDrawSize / gameMap.getChunkSize();
+        resourceDrawSize = chunkDrawSize / gameMap.getChunkSize();
 
-        int totalDrawingWidth = (int) Math.round(map.getChunkGrid().getWidth() * chunkDrawSize);
+        int totalDrawingWidth = (int) Math.round(gameMap.getChunkGrid().getWidth() * chunkDrawSize);
         gridStartX = middleX - totalDrawingWidth / 2;
-        int totalDrawingHeight = (int) Math.round(map.getChunkGrid().getHeight() * chunkDrawSize);
+        int totalDrawingHeight = (int) Math.round(gameMap.getChunkGrid().getHeight() * chunkDrawSize);
         gridStartY = middleY - totalDrawingHeight / 2;
     }
 
@@ -61,7 +61,7 @@ public class GridViewer extends JComponent implements ActionListener {
         for(int y = -currentRadius; y <= currentRadius; y++) {
             for(int x = -currentRadius; x <= currentRadius; x++) {
                 if(Math.abs(y) == currentRadius || Math.abs(x) == currentRadius) {
-                    chunksToGenerate.add(new Point(x, y));
+                    chunksToGenerate.add(TileCoordinate.from(x, y));
                 }
             }
         }
@@ -71,10 +71,10 @@ public class GridViewer extends JComponent implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for(int i = 0; i < map.getChunkGrid().getWidth(); i++) {
-            Point chunkPoint = chunksToGenerate.poll();
-            if (chunkPoint != null) {
-                map.generateChunk(chunkPoint.getX(), chunkPoint.getY());
+        for(int i = 0; i < gameMap.getChunkGrid().getWidth(); i++) {
+            TileCoordinate chunkTileCoordinate = chunksToGenerate.poll();
+            if (chunkTileCoordinate != null) {
+                gameMap.generateChunk(chunkTileCoordinate.getX(), chunkTileCoordinate.getY());
                 resetDrawingValues();
             }
         }
@@ -87,16 +87,16 @@ public class GridViewer extends JComponent implements ActionListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        for(int y = map.getChunkGrid().getFirstY(); y < map.getChunkGrid().getLastY(); y++) {
-            for(int x = map.getChunkGrid().getFirstX(); x < map.getChunkGrid().getLastX(); x++) {
-                Chunk currentChunk = map.getChunk(x, y);
-                double chunkDrawingX = gridStartX + ((x + map.getChunkGrid().getZeroX()) * chunkDrawSize);
-                double chunkDrawingY = gridStartY + ((y + map.getChunkGrid().getZeroY()) * chunkDrawSize);
+        for(int y = gameMap.getChunkGrid().getFirstY(); y < gameMap.getChunkGrid().getLastY(); y++) {
+            for(int x = gameMap.getChunkGrid().getFirstX(); x < gameMap.getChunkGrid().getLastX(); x++) {
+                Chunk currentChunk = gameMap.getChunk(x, y);
+                double chunkDrawingX = gridStartX + ((x + gameMap.getChunkGrid().getZeroX()) * chunkDrawSize);
+                double chunkDrawingY = gridStartY + ((y + gameMap.getChunkGrid().getZeroY()) * chunkDrawSize);
 
                 if(currentChunk != null) {
                     // Draw tiles
-                    for (int tileY = 0; tileY < map.getChunkSize(); tileY++) {
-                        for (int tileX = 0; tileX < map.getChunkSize(); tileX++) {
+                    for (int tileY = 0; tileY < gameMap.getChunkSize(); tileY++) {
+                        for (int tileX = 0; tileX < gameMap.getChunkSize(); tileX++) {
                             Tile currentTile = currentChunk.getTileGrid()[tileY][tileX];
                             if(currentTile != null) {
                                 g.setColor(currentTile.getTileConfig().getTileColor());
@@ -108,8 +108,8 @@ public class GridViewer extends JComponent implements ActionListener {
                     }
 
                     // Draw resources
-                    for (int resourceY = 0; resourceY < map.getChunkSize(); resourceY++) {
-                        for (int resourceX = 0; resourceX < map.getChunkSize(); resourceX++) {
+                    for (int resourceY = 0; resourceY < gameMap.getChunkSize(); resourceY++) {
+                        for (int resourceX = 0; resourceX < gameMap.getChunkSize(); resourceX++) {
                             Resource currentResource = currentChunk.getResourceGrid()[resourceY][resourceX];
                             if(currentResource != null) {
                                 g.setColor(currentResource.getResourceConfig().getResourceColor());

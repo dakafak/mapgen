@@ -1,2 +1,2 @@
 # mapgen
-Game map generator library
+Game gameMap generator library
