@@ -1,8 +1,8 @@
 package dev.fanger.mapgen;
 
+import dev.fanger.mapgen.config.ResourceConfig;
 import dev.fanger.mapgen.map.Chunk;
 import dev.fanger.mapgen.map.GameMap;
-import dev.fanger.mapgen.map.Resource;
 import dev.fanger.mapgen.map.location.TileCoordinate;
 import dev.fanger.mapgen.map.Tile;
 
@@ -104,17 +104,13 @@ public class GridViewer extends JComponent implements ActionListener {
                                 int tileDrawingY = (int) Math.round(chunkDrawingY + (tileY * tileDrawSize));
                                 g.fillRect(tileDrawingX, tileDrawingY, (int) Math.ceil(tileDrawSize), (int) Math.ceil(tileDrawSize));
                             }
-                        }
-                    }
 
-                    // Draw resources
-                    for (int resourceY = 0; resourceY < gameMap.getChunkSize(); resourceY++) {
-                        for (int resourceX = 0; resourceX < gameMap.getChunkSize(); resourceX++) {
-                            Resource currentResource = currentChunk.getResourceGrid()[resourceY][resourceX];
-                            if(currentResource != null) {
-                                g.setColor(currentResource.getResourceConfig().getResourceColor());
-                                int tileDrawingX = (int) Math.round(chunkDrawingX + (resourceX * resourceDrawSize));
-                                int tileDrawingY = (int) Math.round(chunkDrawingY + (resourceY * resourceDrawSize));
+                            // Draw resources
+                            ResourceConfig resourceConfig = currentTile.getResourceConfig();
+                            if(resourceConfig != null) {
+                                g.setColor(resourceConfig.getResourceColor());
+                                int tileDrawingX = (int) Math.round(chunkDrawingX + (tileX * resourceDrawSize));
+                                int tileDrawingY = (int) Math.round(chunkDrawingY + (tileY * resourceDrawSize));
                                 g.fillOval(tileDrawingX, tileDrawingY, (int) Math.ceil(resourceDrawSize), (int) Math.ceil(resourceDrawSize));
                             }
                         }
@@ -125,7 +121,6 @@ public class GridViewer extends JComponent implements ActionListener {
                         g.setColor(Color.RED);
                         g.drawRect((int) Math.round(chunkDrawingX), (int) Math.round(chunkDrawingY), (int) Math.round(chunkDrawSize), (int) Math.round(chunkDrawSize));
                     }
-
                 }
             }
         }

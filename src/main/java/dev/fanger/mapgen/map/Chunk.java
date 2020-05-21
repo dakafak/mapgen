@@ -12,14 +12,12 @@ public class Chunk {
     private int chunkY;
     private int size;
     private Tile[][] tileGrid;
-    private Resource[][] resourceGrid;
 
     public Chunk(int chunkX, int chunkY, int size) {
         this.chunkX = chunkX;
         this.chunkY = chunkY;
         this.size = size;
         tileGrid = new Tile[size][size];
-        resourceGrid = new Resource[size][size];
     }
 
     public double getQ1Height() {
@@ -54,20 +52,19 @@ public class Chunk {
                 TerrainConfig terrainConfigForTile = mapConfig.getRegionConfigForTile(height);
                 TileConfig tileConfig = terrainConfigForTile.getTileConfig();
 
-                // Place new tile with region config
-                Tile tile = new Tile(tileX, tileY, height, tileConfig, terrainConfigForTile, this);
-                tileGrid[y][x] = tile;
-
                 // Generate resource
+                ResourceConfig resourceConfig = null;
                 boolean generateResource = SeedGen.randomNumberRefreshSeed(x, y, seed, 100) >= 75;
                 if(generateResource) {
                     ResourceConfig[] resourceConfigsForTerrain = terrainConfigForTile.getResourceConfigs();
                     if(resourceConfigsForTerrain.length > 0) {
-                        ResourceConfig randomResourceConfig = resourceConfigsForTerrain[(int) SeedGen.randomNumberRefreshSeed(x, y, seed, resourceConfigsForTerrain.length)];
-                        Resource newResource = new Resource(tileX, tileY, tile, randomResourceConfig, randomResourceConfig.getResourceType());
-                        resourceGrid[y][x] = newResource;
+                        resourceConfig = resourceConfigsForTerrain[(int) SeedGen.randomNumberRefreshSeed(x, y, seed, resourceConfigsForTerrain.length)];
                     }
                 }
+
+                // Place new tile with region config
+                Tile tile = new Tile(tileX, tileY, height, tileConfig, terrainConfigForTile, resourceConfig, this);
+                tileGrid[y][x] = tile;
             }
         }
     }
@@ -84,7 +81,4 @@ public class Chunk {
         return tileGrid;
     }
 
-    public Resource[][] getResourceGrid() {
-        return resourceGrid;
-    }
 }

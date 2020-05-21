@@ -31,9 +31,9 @@ public class GameMap {
     }
 
     // chunk grid chunkX and chunkY - consider changing this
-    public void generateChunk(int chunkX, int chunkY) {
+    public Chunk generateChunk(int chunkX, int chunkY) {
         if(getChunk(chunkX, chunkY) != null) {
-            return;
+            return null;
         }
 
         Chunk newChunk = new Chunk(chunkX, chunkY, chunkSize);
@@ -71,6 +71,8 @@ public class GameMap {
 
         newChunk.generate(newChunkHeightMap, seed, mapConfig);
         chunkGrid.setChunk(chunkX, chunkY, newChunk);
+
+        return newChunk;
     }
 
     private double getQ1Height(int chunkX, int chunkY, double maxRandom) {
