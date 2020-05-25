@@ -54,12 +54,16 @@ public class Chunk {
 
                 // Generate resource
                 ResourceConfig resourceConfig = null;
-                boolean generateResource = SeedGen.randomNumberRefreshSeed(x, y, seed, 100) >= 75;
-                if(generateResource) {
-                    ResourceConfig[] resourceConfigsForTerrain = terrainConfigForTile.getResourceConfigs();
-                    if(resourceConfigsForTerrain.length > 0) {
-                        resourceConfig = resourceConfigsForTerrain[(int) SeedGen.randomNumberRefreshSeed(x, y, seed, resourceConfigsForTerrain.length)];
+
+                double currentTotalChance = 0;
+                double spawnChance = SeedGen.randomNumberRefreshSeed(x, y, seed, 1);
+                for(ResourceConfig config : terrainConfigForTile.getResourceConfigs()) {
+                    if(spawnChance <= config.getChance() + currentTotalChance) {
+                        resourceConfig = config;
+                        break;
                     }
+
+                    currentTotalChance += config.getChance();
                 }
 
                 // Place new tile with region config

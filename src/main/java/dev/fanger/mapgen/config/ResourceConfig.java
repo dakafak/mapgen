@@ -10,6 +10,9 @@ public class ResourceConfig {
     private static final String JSON_KEY_ID = "id";
     private static final String JSON_KEY_NAME = "name";
     private static final String JSON_KEY_RESOURCE_TYPE = "type";
+    private static final String JSON_KEY_CHANCE = "chance";
+    private static final String JSON_KEY_SIZE = "size";
+    private static final String JSON_KEY_HEALTH = "health";
     private static final String JSON_KEY_COLOR = "color";
     private static final String JSON_KEY_TEXTURE_IMAGE_LOCATION = "image";
 
@@ -19,6 +22,9 @@ public class ResourceConfig {
     private int id;
     private String name;
     private ResourceType resourceType;
+    private double chance;
+    private double size;
+    private double health;
     private Color resourceColor;
     private String textureImageLocation;
 
@@ -26,6 +32,9 @@ public class ResourceConfig {
         id = jsonObject.getInt(JSON_KEY_ID);
         name = jsonObject.getString(JSON_KEY_NAME);
         resourceType = ResourceType.valueOf(jsonObject.getString(JSON_KEY_RESOURCE_TYPE));
+        chance = jsonObject.getDouble(JSON_KEY_CHANCE);
+        size = jsonObject.getDouble(JSON_KEY_SIZE);
+        health = jsonObject.getDouble(JSON_KEY_HEALTH);
         resourceColor = Color.decode(jsonObject.optString(JSON_KEY_COLOR, "#FFFFFF"));
         textureImageLocation = jsonObject.getString(JSON_KEY_TEXTURE_IMAGE_LOCATION);
     }
@@ -48,5 +57,17 @@ public class ResourceConfig {
 
     public String getTextureImageLocation() {
         return textureImageLocation;
+    }
+
+    public double getChance() {
+        return chance;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    public double getHealth() {
+        return health;
     }
 }

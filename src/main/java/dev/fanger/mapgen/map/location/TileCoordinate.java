@@ -1,7 +1,6 @@
 package dev.fanger.mapgen.map.location;
 
 import java.util.Objects;
-import java.util.Set;
 
 public class TileCoordinate {
 
@@ -45,4 +44,9 @@ public class TileCoordinate {
     public static TileCoordinate from(int x, int y) {
         return new TileCoordinate(x, y);
     }
+
+    public static TileCoordinate from(double x, double y) {
+        return new TileCoordinate((int) x, (int) y);
+    }
+
 }
