@@ -1,16 +1,12 @@
 package dev.fanger.mapgen.config;
 
-import dev.fanger.mapgen.types.ResourceType;
 import org.json.JSONObject;
 
 import java.awt.Color;
 
 public class ResourceConfig {
 
-    private static final String JSON_KEY_ID = "id";
-    private static final String JSON_KEY_NAME = "name";
     private static final String JSON_KEY_RESOURCE_TYPE = "type";
-    private static final String JSON_KEY_CHANCE = "chance";
     private static final String JSON_KEY_SIZE = "size";
     private static final String JSON_KEY_HEALTH = "health";
     private static final String JSON_KEY_COLOR = "color";
@@ -19,35 +15,21 @@ public class ResourceConfig {
     //TODO add a health value to the resource config
     //TODO add sparsity to resource config (grouping would be nice...)
 
-    private int id;
-    private String name;
-    private ResourceType resourceType;
-    private double chance;
+    private String resourceType;
     private double size;
     private double health;
     private Color resourceColor;
     private String textureImageLocation;
 
     public ResourceConfig(JSONObject jsonObject) {
-        id = jsonObject.getInt(JSON_KEY_ID);
-        name = jsonObject.getString(JSON_KEY_NAME);
-        resourceType = ResourceType.valueOf(jsonObject.getString(JSON_KEY_RESOURCE_TYPE));
-        chance = jsonObject.getDouble(JSON_KEY_CHANCE);
+        resourceType = jsonObject.getString(JSON_KEY_RESOURCE_TYPE);
         size = jsonObject.getDouble(JSON_KEY_SIZE);
         health = jsonObject.getDouble(JSON_KEY_HEALTH);
         resourceColor = Color.decode(jsonObject.optString(JSON_KEY_COLOR, "#FFFFFF"));
         textureImageLocation = jsonObject.getString(JSON_KEY_TEXTURE_IMAGE_LOCATION);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ResourceType getResourceType() {
+    public String getResourceType() {
         return resourceType;
     }
 
@@ -57,10 +39,6 @@ public class ResourceConfig {
 
     public String getTextureImageLocation() {
         return textureImageLocation;
-    }
-
-    public double getChance() {
-        return chance;
     }
 
     public double getSize() {

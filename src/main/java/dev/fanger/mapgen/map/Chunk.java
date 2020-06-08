@@ -57,13 +57,17 @@ public class Chunk {
 
                 double currentTotalChance = 0;
                 double spawnChance = SeedGen.randomNumberRefreshSeed(x, y, seed, 1);
-                for(ResourceConfig config : terrainConfigForTile.getResourceConfigs()) {
-                    if(spawnChance <= config.getChance() + currentTotalChance) {
+
+                for(int i = 0; i < terrainConfigForTile.getResourceConfigs().length; i++) {
+                    ResourceConfig config = terrainConfigForTile.getResourceConfigs()[i];
+                    double chance = terrainConfigForTile.getSpawnChances()[i];
+
+                    if(spawnChance <= chance + currentTotalChance) {
                         resourceConfig = config;
                         break;
                     }
 
-                    currentTotalChance += config.getChance();
+                    currentTotalChance += chance;
                 }
 
                 // Place new tile with region config

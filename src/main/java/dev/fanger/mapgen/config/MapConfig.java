@@ -18,7 +18,7 @@ public class MapConfig {
     private double spawnHeight;
 
     private LinkedHashMap<Integer, TileConfig> tileConfigMap;
-    private LinkedHashMap<Integer, ResourceConfig> resourceConfigMap;
+    private LinkedHashMap<String, ResourceConfig> resourceConfigMap;
     private List<TerrainConfig> heightOrderedTerrainConfigList;
 
     public MapConfig(JSONObject jsonObject) {
@@ -37,7 +37,7 @@ public class MapConfig {
         for(int i = 0; i < allResources.length(); i++) {
             JSONObject resourceJSONObject = allResources.getJSONObject(i);
             ResourceConfig resourceConfig = new ResourceConfig(resourceJSONObject);
-            resourceConfigMap.put(resourceConfig.getId(), resourceConfig);
+            resourceConfigMap.put(resourceConfig.getResourceType(), resourceConfig);
         }
 
         JSONArray allRegionConfigs = jsonObject.getJSONArray(JSON_KEY_TERRAIN);

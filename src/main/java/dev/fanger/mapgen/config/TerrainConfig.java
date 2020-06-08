@@ -19,8 +19,9 @@ public class TerrainConfig {
     private double spawnHeight;
     private Color regionColor;
     private ResourceConfig[] resourceConfigs;
+    private double[] spawnChances;
 
-    public TerrainConfig(JSONObject jsonObject, Map<Integer, TileConfig> tileConfigMap, Map<Integer, ResourceConfig> resourceConfigMap) {
+    public TerrainConfig(JSONObject jsonObject, Map<Integer, TileConfig> tileConfigMap, Map<String, ResourceConfig> resourceConfigMap) {
         name = jsonObject.getString(JSON_NAME);
         tileConfig = tileConfigMap.get(jsonObject.getInt(JSON_KEY_TILE));
         spawnHeight = jsonObject.getDouble(JSON_KEY_SPAWN_HEIGHT);
@@ -28,10 +29,15 @@ public class TerrainConfig {
 
         JSONArray resourceIdArray = jsonObject.getJSONArray(JSON_KEY_RESOURCES);
         resourceConfigs = new ResourceConfig[resourceIdArray.length()];
+        spawnChances = new double[resourceIdArray.length()];
         for(int i = 0; i < resourceIdArray.length(); i++) {
-            int resourceId = resourceIdArray.getInt(i);
-            ResourceConfig resourceConfig = resourceConfigMap.get(resourceId);
+            JSONObject resourceObject = resourceIdArray.getJSONObject(i);
+            String resourceType = resourceObject.getString("type");
+            double spawnChance = resourceObject.getDouble("chance");
+
+            ResourceConfig resourceConfig = resourceConfigMap.get(resourceType);
             resourceConfigs[i] = resourceConfig;
+            spawnChances[i] = spawnChance;
         }
     }
 
@@ -53,5 +59,9 @@ public class TerrainConfig {
 
     public ResourceConfig[] getResourceConfigs() {
         return resourceConfigs;
+    }
+
+    public double[] getSpawnChances() {
+        return spawnChances;
     }
 }
