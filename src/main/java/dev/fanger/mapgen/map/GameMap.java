@@ -200,6 +200,11 @@ public class GameMap {
 
     public Tile getTile(double gameX, double gameY) {
         Chunk chunk = getChunk(gameX, gameY);
+
+        if(chunk == null) {
+            return null;
+        }
+
         return chunk.getTile(gameX, gameY);
     }
 

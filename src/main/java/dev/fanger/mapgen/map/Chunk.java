@@ -37,8 +37,9 @@ public class Chunk {
     }
 
     public Tile getTile(double gameX, double gameY) {
-        int tileX = ((int) gameX) - (chunkX * size);
-        int tileY = ((int) gameY) - (chunkY * size);
+        int tileX = ((int) Math.floor(gameX)) - (chunkX * size);
+        int tileY = ((int) Math.floor(gameY)) - (chunkY * size);
+
         return tileGrid[tileY][tileX];
     }
 

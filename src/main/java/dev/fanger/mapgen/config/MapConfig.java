@@ -85,6 +85,14 @@ public class MapConfig {
         return heightOrderedTerrainConfigList;
     }
 
+    public LinkedHashMap<Integer, TileConfig> getTileConfigMap() {
+        return tileConfigMap;
+    }
+
+    public LinkedHashMap<String, ResourceConfig> getResourceConfigMap() {
+        return resourceConfigMap;
+    }
+
     @Override
     public String toString() {
         return "MapConfig{" +

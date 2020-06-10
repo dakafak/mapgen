@@ -3,6 +3,7 @@ package dev.fanger.mapgen.config;
 import org.json.JSONObject;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 public class ResourceConfig {
 
@@ -12,14 +13,12 @@ public class ResourceConfig {
     private static final String JSON_KEY_COLOR = "color";
     private static final String JSON_KEY_TEXTURE_IMAGE_LOCATION = "image";
 
-    //TODO add a health value to the resource config
-    //TODO add sparsity to resource config (grouping would be nice...)
-
     private String resourceType;
     private double size;
     private double health;
     private Color resourceColor;
     private String textureImageLocation;
+    private BufferedImage image;
 
     public ResourceConfig(JSONObject jsonObject) {
         resourceType = jsonObject.getString(JSON_KEY_RESOURCE_TYPE);
@@ -39,6 +38,14 @@ public class ResourceConfig {
 
     public String getTextureImageLocation() {
         return textureImageLocation;
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 
     public double getSize() {
