@@ -4,6 +4,7 @@ import dev.fanger.mapgen.types.TilePhysicalProperty;
 import org.json.JSONObject;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 public class TileConfig {
 
@@ -18,6 +19,7 @@ public class TileConfig {
     private TilePhysicalProperty tilePhysicalProperty;
     private Color tileColor;
     private String textureImageLocation;
+    private BufferedImage image;
 
     public TileConfig(JSONObject jsonObject) {
         id = jsonObject.getInt(JSON_KEY_ID);
@@ -45,6 +47,14 @@ public class TileConfig {
 
     public String getTextureImageLocation() {
         return textureImageLocation;
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 
     @Override
